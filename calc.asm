@@ -1,7 +1,7 @@
 section .bss
-num1 resb 2
+num1 resb 32
 op resb 2
-num2 resb 2
+num2 resb 32
 result resb 32
 
 section .data
@@ -13,6 +13,9 @@ msg2_len equ $ - msg2
 
 msg3 db "Enter the second number: ", 0xa
 msg3_len equ $ - msg3
+
+res_msg db "Result: ", 0xa
+res_len equ $ - res_msg
 
 err_msg db "Invalid Operation", 0xa
 err_len equ $ - err_msg
@@ -76,7 +79,7 @@ mov byte [result + 1], 0xa
 
 mov rdi, result
 mov rsi, 32
-call print
+call print_res
 call exit
 
 case_sub:
@@ -95,7 +98,7 @@ mov byte [result + 1], 0xa
 
 mov rdi, result
 mov rsi, 32
-call print
+call print_res
 call exit
 
 case_mul:
@@ -114,7 +117,7 @@ mov byte [result + 1], 0xa
 
 mov rdi, result
 mov rsi, 32
-call print
+call print_res
 call exit
 
 case_div:
@@ -136,7 +139,7 @@ mov byte [result + 1], 0xa
 
 mov rdi, result
 mov rsi, 32
-call print
+call print_res
 call exit
 
 error:
@@ -166,6 +169,24 @@ mov rax, 0
 mov rdi, 0
 mov rdx, 2
 syscall
+ret
+
+print_res:
+push rsi
+push rdi
+
+mov rax, 1
+mov rdi, 1
+mov rsi, res_msg
+mov rdx, res_len
+syscall
+
+pop rdi
+pop rsi
+
+sub rsp, 8
+call print
+add rsp, 8
 ret
 
 atd:
